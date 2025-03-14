@@ -10,5 +10,5 @@ gemspec
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 
-gem "rails", ">= 6.1"
+gem "rails", "~> #{ENV.fetch('RAILS_VERSION', '7.0')}.0"
 gem 'pry', group: [:development, :test]

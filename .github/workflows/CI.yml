@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  Test:
+    name: Ruby ${{ matrix.ruby_version }} / Rails ${{ matrix.rails_version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby_version:
+          - '3.3'
+        rails_version:
+          - '7.2'
+          - '7.1'
+          - '7.0'
+          - '6.1'
+    env:
+      RAILS_VERSION: ${{ matrix.rails_version }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby_version }}
+        bundler-cache: true
+    - name: Setup database
+      run: |
+       bin/rails db:migrate RAILS_ENV=test
+
+    - name: RSpec
+      run: |
+        bundle exec rspec
